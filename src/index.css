@@ -1,0 +1,171 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ *
+ * Design tokens — every colour here was sampled straight out of the
+ * "Helmy Safira.pdf" artwork so the site and the print design match.
+ * ------------------------------------------------------------------ */
+@theme {
+  /* deep wine / maroon — the dark sections */
+  --color-wine-950: #250607;
+  --color-wine-900: #3b0d11;
+  --color-wine-800: #4f161a;
+  --color-wine-700: #600a02;
+  --color-wine-600: #7b2a2a;
+
+  /* embossed cream — the light sections */
+  --color-cream-50: #faf9f7;
+  --color-cream-100: #f4f3ee;
+  --color-cream-200: #ece9e4;
+  --color-cream-300: #ddd8d0;
+
+  /* aged gold / bronze — seals, buttons, cover type */
+  --color-gilt-700: #6d451b;
+  --color-gilt-500: #a8763a;
+  --color-gilt-300: #d8b98a;
+
+  /* dusty rose — the "Bride and Groom" pill */
+  --color-blush-400: #ba9595;
+
+  /*
+   * The artwork's own faces are not licensed for the web, so these are the
+   * closest Google Fonts, chosen by rendering candidates against the PDF:
+   *  - Cormorant Garamond for the Garamond-ish serif throughout
+   *  - Marck Script for the monoline signature hand (the couple's names)
+   *  - Pinyon Script for the copperplate on the title card
+   */
+  --font-serif: "Cormorant Garamond", ui-serif, Georgia, serif;
+  --font-script: "Marck Script", "Segoe Script", cursive;
+  --font-copper: "Pinyon Script", "Segoe Script", cursive;
+  --font-sans: "Jost", ui-sans-serif, system-ui, sans-serif;
+
+  --ease-silk: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* Matches the intro screen, so the very first paint is never a dark flash. */
+    background-color: var(--color-cream-100);
+    overscroll-behavior-y: none;
+    /*
+     * Mobile Safari and Chrome inflate the type of a narrow column on rotation
+     * ("text autosizing"), which pulls live text out of the artwork it is
+     * placed against. Every size here is already relative to the column.
+     */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    font-family: var(--font-serif);
+    color: var(--color-wine-900);
+    background-color: var(--color-cream-100);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /*
+   * iOS zooms the page in — and never back out — when a control smaller than
+   * 16px takes focus. The RSVP fields set their own floor; this is the net.
+   */
+  input,
+  select,
+  textarea {
+    font-size: max(16px, 1em);
+  }
+
+  /* Media never overflows its column, whatever intrinsic size it carries. */
+  img,
+  video {
+    max-width: 100%;
+  }
+
+  video {
+    display: block;
+    height: auto;
+  }
+
+  /* The invitation is a portrait piece: never let it scroll sideways. */
+  #root {
+    overflow-x: clip;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+    -webkit-user-drag: none;
+    user-select: none;
+  }
+
+  button {
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    /* The looping keyframes below are decorative; nothing depends on them. */
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* A hairline gold rule used between stacked blocks. */
+@utility rule-gilt {
+  background-image: linear-gradient(to right, transparent, var(--color-gilt-500) 18%, var(--color-gilt-300) 50%, var(--color-gilt-500) 82%, transparent);
+}
+
+/* Slow, continuous drift for decorative petals / sparkles. */
+@keyframes petal-fall {
+  0% {
+    transform: translate3d(0, -8vh, 0) rotate(0deg);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.85;
+  }
+  88% {
+    opacity: 0.75;
+  }
+  100% {
+    transform: translate3d(var(--drift, 4vw), 108vh, 0) rotate(var(--spin, 220deg));
+    opacity: 0;
+  }
+}
+
+@keyframes vinyl-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes shimmer {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}

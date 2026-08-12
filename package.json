@@ -1,0 +1,35 @@
+{
+  "name": "wedding-invitation-helmy-safira",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Undangan pernikahan digital Helmy & Safira — 24 Oktober 2026",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc -b",
+    "assets": "node --max-old-space-size=4096 tools/build-assets.mjs",
+    "layout:render": "node tools/render-pdf.mjs",
+    "layout:locate": "node --max-old-space-size=8192 tools/locate-layout.mjs",
+    "layout:preview": "node --max-old-space-size=4096 tools/preview-layout.mjs"
+  },
+  "dependencies": {
+    "motion": "^13.1.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@napi-rs/canvas": "^1.0.5",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^6.0.0",
+    "ffmpeg-static": "^5.3.0",
+    "gifuct-js": "^2.1.2",
+    "pdf-to-img": "^6.2.0",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9.0",
+    "vite": "^8.2.0"
+  }
+}

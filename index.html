@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#3b0d11" />
+    <link rel="icon" type="image/png" href="./favicon.png" />
+    <link rel="apple-touch-icon" href="./favicon.png" />
+
+    <title>Helmy &amp; Safira — Wedding Invitation</title>
+    <meta name="description" content="Dengan memohon Rahmat dan Ridho dari Allah SWT, kami bermaksud menyelenggarakan pernikahan kami. Sabtu, 24 Oktober 2026 — Joglo Jolali." />
+
+    <!-- Open Graph: this is what shows up when the link is shared on WhatsApp -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Helmy &amp; Safira — Wedding Invitation" />
+    <meta property="og:description" content="Sabtu, 24 Oktober 2026 · Joglo Jolali. Merupakan suatu kehormatan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir." />
+    <meta property="og:image" content="./og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Marck+Script&family=Pinyon+Script&family=Jost:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="preload" as="image" href="./assets/cover/bg-garden.webp" />
+    <link rel="preload" as="image" href="./assets/cover/lace-card.webp" />
+
+    <!--
+      First paint, before the bundle arrives. On a slow connection the guest
+      would otherwise stare at an empty page for several seconds, so the names
+      are drawn here in plain HTML with no dependency on the CSS file, the JS or
+      the web fonts. React's intro screen replaces this the moment it mounts —
+      createRoot() clears #root — and it shows the same words in the same place,
+      so the handover is invisible.
+    -->
+    <style>
+      #splash {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: radial-gradient(ellipse at 50% 42%, #fffdf8 0%, #f4f3ee 55%, #e8e2d6 100%);
+        font-family: "Cormorant Garamond", Georgia, serif;
+        color: #6d451b;
+        text-align: center;
+        padding: 2rem;
+      }
+      #splash .eyebrow {
+        margin: 0;
+        font-size: 0.62rem;
+        letter-spacing: 0.5em;
+        text-transform: uppercase;
+        opacity: 0.7;
+      }
+      #splash .names {
+        font-family: "Pinyon Script", Georgia, serif;
+        font-size: clamp(2.9rem, 13vw, 4.6rem);
+        line-height: 1.05;
+        margin: 0.75rem 0 0;
+        font-weight: 400;
+      }
+      #splash .amp {
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: 0.62em;
+        vertical-align: middle;
+      }
+      #splash .rule {
+        width: 10rem;
+        height: 1px;
+        margin-top: 1.5rem;
+        background: linear-gradient(to right, transparent, #a8763a, #d8b98a, #a8763a, transparent);
+      }
+      #splash .date {
+        margin: 1.25rem 0 0;
+        font-size: 0.875rem;
+        letter-spacing: 0.3em;
+        color: #4f161a;
+        opacity: 0.72;
+      }
+      /* Same footprint as the React progress bar, so the handover does not jump. */
+      #splash .bar {
+        width: 11rem;
+        height: 2px;
+        margin-top: 2.5rem;
+        border-radius: 999px;
+        background: rgba(109, 69, 27, 0.12);
+        overflow: hidden;
+      }
+      #splash .bar span {
+        display: block;
+        width: 8%;
+        height: 100%;
+        border-radius: 999px;
+        background: #a8763a;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <div id="splash">
+        <p class="eyebrow">The Wedding Of</p>
+        <h1 class="names">Helmy <span class="amp">&amp;</span> Safira</h1>
+        <div class="rule"></div>
+        <p class="date">24 . 10 . 2026</p>
+        <div class="bar"><span></span></div>
+      </div>
+    </div>
+    <noscript>
+      <div style="font-family: Georgia, serif; padding: 2rem; text-align: center">Undangan ini membutuhkan JavaScript. Mohon aktifkan JavaScript pada browser Anda.</div>
+    </noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
