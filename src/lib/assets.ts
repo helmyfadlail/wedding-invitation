@@ -12,13 +12,22 @@ const root = (): string => BASE.replace(/\/?$/, "/");
 /** Anything else served straight out of /public — the music track, mainly. */
 export const publicUrl = (path: string): string => `${root()}${path.replace(/^\//, "")}`;
 
-export const asset = (path: string): string => `${root()}assets/${path}`;
+type Entry = { w: number; h: number; v?: string };
+const ENTRIES = manifest as Record<string, Entry>;
 
-type Size = { w: number; h: number };
-const SIZES = manifest as Record<string, Size>;
+/**
+ * Graphics carry a `?v=` stamp of their own bytes, written by the asset build.
+ * Vite fingerprints the files it bundles, but /public is copied through as-is,
+ * so without this a swapped photo keeps its old URL and guests who have already
+ * opened the invitation go on seeing the previous one out of cache.
+ */
+export const asset = (path: string): string => {
+  const v = ENTRIES[path]?.v;
+  return `${root()}assets/${path}${v ? `?v=${v}` : ""}`;
+};
 
 /** Intrinsic size, so <img> can reserve the right box and avoid layout shift. */
-export const dim = (path: string): Size | undefined => SIZES[path];
+export const dim = (path: string): { w: number; h: number } | undefined => ENTRIES[path];
 
 export const BG = {
   cream: "bg/cream.webp",

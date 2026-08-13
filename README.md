@@ -1,6 +1,6 @@
 # Helmy &amp; Safira — Undangan Pernikahan Digital
 
-A web version of the printed invitation in `Helmy Safira.pdf`, built from the
+A web version of the printed invitation in `reference/Helmy Safira.pdf`, built from the
 artwork in `reference/`. Sabtu, 24 Oktober 2026 · Joglo Jolali.
 
 ```
@@ -171,7 +171,7 @@ first paint and anyone browsing with reduced motion turned on.
 | | before | after |
 | --- | --- | --- |
 | Artwork | 20 MB PNG/JPEG | 3.4 MB WebP, transparent margins trimmed |
-| Love-story photo | 5.4 MB JPEG + frame | 88 KB WebP, composited into the frame |
+| Love-story photo | 5.4 MB JPEG + frame | 71 KB frame + 29 KB photo, layered in the markup |
 | Photobooth GIF | 50 MB, 60 frames | 129 KB mp4 + 115 KB webm loop, 128 KB poster, six 20 KB stills |
 | **Total** | **70 MB** | **3.9 MB** |
 
@@ -185,7 +185,7 @@ shifts as it loads.
 
 ```
 reference/                  original artwork (source of truth, not shipped)
-Helmy Safira.pdf            the printed design
+  Helmy Safira.pdf          the printed design
 
 tools/
   build-assets.mjs          reference/ -> public/assets/ + manifest, favicon, og-image

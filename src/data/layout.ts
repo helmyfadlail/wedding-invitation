@@ -123,9 +123,28 @@ export const MAP_BUTTON: Piece = { src: "date/btn-lihat-lokasi.webp", x: 21.5, y
 
 export const STORY: Piece[] = [
   { src: "story/txt-our-love-story.webp", x: 12.6, y: 7.0, w: 72.3, z: 20, from: "in", alt: "Our Love Story" },
-  { src: "story/photo-story.webp", x: 2.8, y: 16.7, w: 93.8, z: 10, from: "in", delay: 0.15, alt: "Helmy & Safira" },
   { src: "story/badge-story.webp", x: 1.2, y: 57.3, w: 94.6, z: 15, from: "up", delay: 0.3, alt: "" },
 ];
+
+/**
+ * The framed photo on slide 6 is two files layered in the markup, not one
+ * merged graphic: the lace frame — transparent wherever the source JPEG painted
+ * black — sitting over the photograph, which shows through its opening.
+ *
+ * Keeping them apart means either can be swapped on its own: a new photo needs
+ * no new frame, and the couple can drop a different frame around the same
+ * photograph. StorySection puts them together.
+ */
+export const STORY_FRAME: Piece = { src: "story/frame-story.webp", x: 2.8, y: 16.7, w: 93.8, z: 10, from: "in", delay: 0.15 };
+
+export const STORY_PHOTO = "story/photo-story.webp";
+
+/**
+ * The frame's opening, as a share of the frame image. Measured by
+ * tools/build-assets.mjs, which prints these four numbers — re-run
+ * `npm run assets` and paste them back if the frame ever changes.
+ */
+export const STORY_WINDOW = { x: 16.15, y: 18.42, w: 65.83, h: 63.49 } as const;
 
 export const GALLERY: Piece[] = [
   { src: "story/txt-our-gallery.webp", x: 24.3, y: 2.2, w: 48.9, z: 20, from: "in", alt: "Our Gallery" },

@@ -13,7 +13,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const SRC = path.join(ROOT, "Helmy Safira.pdf");
+const SRC = path.join(ROOT, "reference", "Helmy Safira.pdf");
 const OUTDIR = path.join(ROOT, "tools", ".preview");
 
 let pdf;

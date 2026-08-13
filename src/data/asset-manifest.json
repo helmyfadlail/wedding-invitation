@@ -1,234 +1,297 @@
 {
   "cover/bg-garden.webp": {
     "w": 1280,
-    "h": 720
+    "h": 720,
+    "v": "4a44f982"
   },
   "cover/lace-card.webp": {
     "w": 581,
-    "h": 796
+    "h": 796,
+    "v": "269bd699"
   },
   "cover/txt-youre-invited.webp": {
     "w": 960,
-    "h": 133
+    "h": 133,
+    "v": "51938432"
   },
   "cover/txt-helmy.webp": {
     "w": 631,
-    "h": 341
+    "h": 341,
+    "v": "6a140ece"
   },
   "cover/txt-amp.webp": {
     "w": 268,
-    "h": 267
+    "h": 267,
+    "v": "45714b7d"
   },
   "cover/txt-safira.webp": {
     "w": 949,
-    "h": 559
+    "h": 559,
+    "v": "c49d300c"
   },
   "cover/txt-wedding.webp": {
     "w": 960,
-    "h": 151
+    "h": 151,
+    "v": "355c4b18"
   },
   "cover/txt-click-to-open.webp": {
     "w": 960,
-    "h": 184
+    "h": 184,
+    "v": "df60f52a"
   },
   "cover/btn-open.webp": {
     "w": 960,
-    "h": 165
+    "h": 165,
+    "v": "d1557a9c"
   },
   "bg/cream.webp": {
     "w": 1400,
-    "h": 788
+    "h": 788,
+    "v": "d7921af6"
   },
   "bg/maroon.webp": {
     "w": 1400,
-    "h": 788
+    "h": 788,
+    "v": "5e068100"
   },
   "hero/envelope.webp": {
     "w": 927,
-    "h": 696
+    "h": 696,
+    "v": "724973da"
   },
   "hero/name-badge.webp": {
     "w": 960,
-    "h": 1141
+    "h": 1141,
+    "v": "59cbeea6"
   },
   "hero/vinyl.webp": {
     "w": 925,
-    "h": 891
+    "h": 891,
+    "v": "adc2fda6"
   },
   "hero/photo-small.webp": {
     "w": 692,
-    "h": 1623
+    "h": 1623,
+    "v": "9e052370"
   },
   "hero/photo-large.webp": {
     "w": 832,
-    "h": 652
+    "h": 652,
+    "v": "14d84be4"
   },
   "verse/ar-rum-21.webp": {
     "w": 942,
-    "h": 1208
+    "h": 1208,
+    "v": "cd2278cf"
   },
   "verse/bismillah.webp": {
     "w": 960,
-    "h": 166
+    "h": 166,
+    "v": "a36fb424"
   },
   "verse/txt-memohon-rahmat.webp": {
     "w": 960,
-    "h": 167
+    "h": 167,
+    "v": "be89b3f5"
   },
   "couple/txt-bride-and-groom.webp": {
     "w": 960,
-    "h": 101
+    "h": 101,
+    "v": "9acd03a7"
   },
   "couple/pill-frame.webp": {
     "w": 960,
-    "h": 227
+    "h": 227,
+    "v": "e1a8ead3"
   },
   "couple/photo-bride.webp": {
     "w": 939,
-    "h": 1241
+    "h": 1241,
+    "v": "42fbd2a9"
   },
   "couple/photo-groom.webp": {
     "w": 960,
-    "h": 1269
+    "h": 1269,
+    "v": "487c65bb"
   },
   "couple/rings.webp": {
     "w": 808,
-    "h": 661
+    "h": 661,
+    "v": "4826ae74"
   },
   "couple/flower-bride.webp": {
     "w": 777,
-    "h": 1425
+    "h": 1425,
+    "v": "828f93e5"
   },
   "couple/flower-groom.webp": {
     "w": 832,
-    "h": 1524
+    "h": 1524,
+    "v": "dd742a13"
   },
   "couple/flower-bottom.webp": {
     "w": 826,
-    "h": 582
+    "h": 582,
+    "v": "dd438264"
   },
   "date/frame-timer.webp": {
     "w": 960,
-    "h": 440
+    "h": 440,
+    "v": "ba974128"
   },
   "date/garland-white.webp": {
     "w": 960,
-    "h": 155
+    "h": 155,
+    "v": "d29d9b69"
   },
   "date/txt-save-the-date.webp": {
     "w": 960,
-    "h": 159
+    "h": 159,
+    "v": "6701359c"
   },
   "date/txt-oktober.webp": {
     "w": 960,
-    "h": 151
+    "h": 151,
+    "v": "8473be0c"
   },
   "date/frame-oval.webp": {
     "w": 742,
-    "h": 470
+    "h": 470,
+    "v": "914e8945"
   },
   "date/txt-akad-nikah.webp": {
     "w": 960,
-    "h": 182
+    "h": 182,
+    "v": "68c7cd26"
   },
   "date/txt-akad-date.webp": {
     "w": 960,
-    "h": 88
+    "h": 88,
+    "v": "ec7aab8c"
   },
   "date/txt-akad-time.webp": {
     "w": 960,
-    "h": 111
+    "h": 111,
+    "v": "f90eb5cf"
   },
   "date/txt-resepsi.webp": {
     "w": 599,
-    "h": 262
+    "h": 262,
+    "v": "e83a71cf"
   },
   "date/txt-resepsi-date.webp": {
     "w": 960,
-    "h": 88
+    "h": 88,
+    "v": "8e82041a"
   },
   "date/txt-resepsi-time.webp": {
     "w": 960,
-    "h": 107
+    "h": 107,
+    "v": "3cd1dd21"
   },
   "date/txt-lokasi.webp": {
     "w": 960,
-    "h": 129
+    "h": 129,
+    "v": "d88184b4"
   },
   "date/btn-lihat-lokasi.webp": {
     "w": 960,
-    "h": 164
+    "h": 164,
+    "v": "087472ad"
   },
   "story/txt-our-love-story.webp": {
     "w": 960,
-    "h": 216
+    "h": 216,
+    "v": "5c89968d"
   },
   "story/badge-story.webp": {
     "w": 893,
-    "h": 587
+    "h": 587,
+    "v": "02d9eef8"
   },
   "story/txt-our-gallery.webp": {
     "w": 960,
-    "h": 280
+    "h": 280,
+    "v": "81775945"
   },
   "story/garland-maroon.webp": {
     "w": 960,
-    "h": 155
+    "h": 155,
+    "v": "a4a9d861"
   },
   "closing/photo-frame.webp": {
     "w": 960,
-    "h": 1169
+    "h": 1169,
+    "v": "f2b61426"
   },
   "closing/txt-kata-penutup.webp": {
     "w": 960,
-    "h": 316
+    "h": 316,
+    "v": "8bfdea25"
   },
   "closing/txt-wassalam.webp": {
     "w": 960,
-    "h": 94
+    "h": 94,
+    "v": "d1e8f3e2"
   },
   "story/photostrip.webm": {
     "w": 600,
-    "h": 1200
+    "h": 1200,
+    "v": "0dcf57c0"
   },
   "story/photostrip.mp4": {
     "w": 600,
-    "h": 1200
+    "h": 1200,
+    "v": "07deb47e"
   },
   "story/photostrip.webp": {
     "w": 900,
-    "h": 1800
+    "h": 1800,
+    "v": "bb9ef27c"
   },
   "story/photo-1.webp": {
     "w": 412,
-    "h": 537
+    "h": 537,
+    "v": "d4fc7c38"
   },
   "story/photo-2.webp": {
     "w": 412,
-    "h": 537
+    "h": 537,
+    "v": "77278bd0"
   },
   "story/photo-3.webp": {
     "w": 412,
-    "h": 532
+    "h": 532,
+    "v": "abd4ec37"
   },
   "story/photo-4.webp": {
     "w": 412,
-    "h": 532
+    "h": 532,
+    "v": "4c69c9c1"
   },
   "story/photo-5.webp": {
     "w": 412,
-    "h": 532
+    "h": 532,
+    "v": "89e16dc8"
   },
   "story/photo-6.webp": {
     "w": 412,
-    "h": 532
+    "h": 532,
+    "v": "26087902"
+  },
+  "story/frame-story.webp": {
+    "w": 960,
+    "h": 702,
+    "v": "5dc0851a"
   },
   "story/photo-story.webp": {
-    "w": 960,
-    "h": 702
+    "w": 811,
+    "h": 572,
+    "v": "4053f104"
   },
   "hero/vinyl-disc.webp": {
     "w": 600,
-    "h": 600
+    "h": 600,
+    "v": "bce816a5"
   }
 }

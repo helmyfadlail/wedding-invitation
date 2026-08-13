@@ -19,6 +19,7 @@ import { createCanvas, loadImage } from "@napi-rs/canvas";
 import ffmpeg from "ffmpeg-static";
 import { parseGIF, decompressFrames } from "gifuct-js";
 import { spawn } from "node:child_process";
+import { createHash } from "node:crypto";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -141,11 +142,22 @@ function alphaBounds(ctx, w, h, threshold = 8) {
   return x1 < 0 ? { x: 0, y: 0, w, h } : { x: x0, y: y0, w: x1 - x0 + 1, h: y1 - y0 + 1 };
 }
 
+/**
+ * Short content hash, recorded in the manifest and appended to the URL as `?v=`.
+ *
+ * Vite fingerprints what it bundles, but /public is copied through verbatim —
+ * so swapping a photo leaves the URL identical and every guest who has already
+ * opened the invitation keeps seeing the old one out of cache. Hashing the
+ * bytes here means a changed file is a changed URL, and an unchanged file still
+ * caches for as long as the host allows.
+ */
+const version = (buffer) => createHash("sha256").update(buffer).digest("hex").slice(0, 8);
+
 async function emit(dest, buffer, w, h) {
   const file = path.join(OUT, `${dest}.webp`);
   await fs.mkdir(path.dirname(file), { recursive: true });
   await fs.writeFile(file, buffer);
-  manifest[`${dest}.webp`] = { w, h };
+  manifest[`${dest}.webp`] = { w, h, v: version(buffer) };
   bytesOut += buffer.length;
   return buffer.length;
 }
@@ -276,7 +288,9 @@ async function processGif() {
     const mean = frames.reduce((sum, f) => sum + f.delay, 0) / frames.length;
     const fps = Math.max(1, Math.round(1000 / mean));
     await encodeStripVideo(dir, frames.length, fps);
-    for (const dest of ["story/photostrip.webm", "story/photostrip.mp4"]) manifest[dest] = { w: vw, h: vh };
+    for (const dest of ["story/photostrip.webm", "story/photostrip.mp4"]) {
+      manifest[dest] = { w: vw, h: vh, v: version(await fs.readFile(path.join(OUT, dest))) };
+    }
   } finally {
     await fs.rm(dir, { recursive: true, force: true });
   }
@@ -450,43 +464,50 @@ async function processStoryPhoto() {
   if (!region) throw new Error("story photo: no window found inside the frame");
   const box = region.box;
 
-  // The photograph, cover-fitted to the window and clipped to its exact shape.
-  const photoImg = await loadImage(photoPath);
-  const [plate, pctx] = ctxOf(W, H);
-  const cover = Math.max(box.w / photoImg.width, box.h / photoImg.height);
-  const dw = photoImg.width * cover;
-  const dh = photoImg.height * cover;
-  pctx.drawImage(photoImg, box.x + box.w / 2 - dw * STORY_PHOTO.focus.x, box.y + box.h / 2 - dh * STORY_PHOTO.focus.y, dw, dh);
-
-  const plated = pctx.getImageData(0, 0, W, H);
-  const inWindow = new Uint8Array(W * H);
-  for (const i of region.pixels) inWindow[i] = 1;
-  for (let p = 0; p < inWindow.length; p++) {
-    if (!inWindow[p]) plated.data[p * 4 + 3] = 0;
-  }
-  pctx.putImageData(plated, 0, 0);
-
-  // Now the frame itself: black becomes transparent, on a short ramp so the
-  // lace keeps a soft edge instead of a stair-stepped one.
+  // ---- the frame: painted black becomes alpha again, on a short ramp so the
+  // lace keeps a soft edge instead of a stair-stepped one ----
   for (let i = 0; i < px.data.length; i += 4) {
     const value = luma(px.data[i], px.data[i + 1], px.data[i + 2]);
     px.data[i + 3] = Math.round(255 * Math.min(1, Math.max(0, (value - 6) / (STORY_PHOTO.black - 6))));
   }
   fctx.putImageData(px, 0, 0);
 
-  const [out, octx] = ctxOf(W, H);
-  octx.drawImage(plate, 0, 0);
-  octx.drawImage(frame, 0, 0);
-
-  const trim = alphaBounds(octx, W, H);
+  const trim = alphaBounds(fctx, W, H);
   const scale = Math.min(1, MAX_W / trim.w);
-  const w = Math.round(trim.w * scale);
-  const h = Math.round(trim.h * scale);
-  const [final, ctx] = ctxOf(w, h);
-  ctx.drawImage(out, trim.x, trim.y, trim.w, trim.h, 0, 0, w, h);
+  const fw = Math.round(trim.w * scale);
+  const fh = Math.round(trim.h * scale);
+  const [framed, framedCtx] = ctxOf(fw, fh);
+  framedCtx.drawImage(frame, trim.x, trim.y, trim.w, trim.h, 0, 0, fw, fh);
+  const frameBytes = await emit("story/frame-story", framed.toBuffer("image/webp", QUALITY), fw, fh);
 
-  const bytes = await emit("story/photo-story", final.toBuffer("image/webp", QUALITY), w, h);
-  console.log(`story/photo-story             ${W}x${H} frame, window ${box.w}x${box.h} at ${box.x},${box.y} -> ${w}x${h}  ${(bytes / 1024).toFixed(0)} KB`);
+  // ---- the photograph, cropped to the window's shape but kept as its own file
+  // so the two can be layered (and swapped) in the markup ----
+  const photoImg = await loadImage(photoPath);
+  const cover = Math.max(box.w / photoImg.width, box.h / photoImg.height);
+  const sw = box.w / cover;
+  const sh = box.h / cover;
+  const sx = Math.min(Math.max(0, photoImg.width * STORY_PHOTO.focus.x - sw / 2), photoImg.width - sw);
+  const sy = Math.min(Math.max(0, photoImg.height * STORY_PHOTO.focus.y - sh / 2), photoImg.height - sh);
+  const [photo, photoCtx] = ctxOf(box.w, box.h);
+  photoCtx.drawImage(photoImg, sx, sy, sw, sh, 0, 0, box.w, box.h);
+  const photoBytes = await emit("story/photo-story", photo.toBuffer("image/webp", QUALITY), box.w, box.h);
+
+  // ---- where the window sits, as a share of the trimmed frame ----
+  // These four numbers are what STORY_WINDOW in src/data/layout.ts holds; the
+  // photo is positioned against them in CSS rather than baked into the frame.
+  const pct = (n) => Number(n.toFixed(2));
+  const window = {
+    x: pct(((box.x - trim.x) / trim.w) * 100),
+    y: pct(((box.y - trim.y) / trim.h) * 100),
+    w: pct((box.w / trim.w) * 100),
+    h: pct((box.h / trim.h) * 100),
+  };
+  const rectangular = region.pixels.length === box.w * box.h;
+
+  console.log(`story/frame-story             ${W}x${H} -> ${fw}x${fh}  ${(frameBytes / 1024).toFixed(0)} KB  (black keyed to alpha)`);
+  console.log(`story/photo-story             ${photoImg.width}x${photoImg.height} -> ${box.w}x${box.h}  ${(photoBytes / 1024).toFixed(0)} KB`);
+  console.log(`  window ${JSON.stringify(window)}  ${rectangular ? "rectangular" : "NOT rectangular — CSS box will not match exactly"}`);
+  console.log(`  -> paste into STORY_WINDOW in src/data/layout.ts`);
 }
 
 /**
