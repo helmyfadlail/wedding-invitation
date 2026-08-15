@@ -10,10 +10,14 @@
  * GET returns the list, POST accepts one entry. See README.
  */
 
+/** Whether the guest is coming. The whole point of an RSVP. */
+export type Attendance = "hadir" | "tidak-hadir";
+
 export type Wish = {
   id: string;
   name: string;
   phone: string;
+  attendance: Attendance;
   guests: number;
   message: string;
   /** Epoch milliseconds. */
@@ -25,18 +29,50 @@ export type NewWish = Omit<Wish, "id" | "at">;
 const KEY = "helmy-safira.rsvp.v1";
 const ENDPOINT: string | undefined = import.meta.env.VITE_RSVP_ENDPOINT;
 
-const isWish = (value: unknown): value is Wish => {
-  if (typeof value !== "object" || value === null) return false;
-  const w = value as Record<string, unknown>;
-  return typeof w.id === "string" && typeof w.name === "string" && typeof w.message === "string";
+const ATTENDANCE: readonly string[] = ["hadir", "tidak-hadir"];
+
+const asTime = (value: unknown): number => {
+  if (typeof value === "number" && Number.isFinite(value)) return value;
+  // A spreadsheet hands back an ISO string, not epoch milliseconds.
+  const parsed = typeof value === "string" ? Date.parse(value) : NaN;
+  return Number.isNaN(parsed) ? Date.now() : parsed;
 };
+
+/**
+ * Rows arrive from three places — this device's storage, whatever sheet or
+ * worker the endpoint is backed by, and entries written before the attendance
+ * column existed — so missing fields are filled in rather than the whole row
+ * thrown away. Only a row with no id or no name is unusable.
+ *
+ * An entry from before this column is treated as "hadir": at the time, saying
+ * you were not coming was not something the form could express.
+ */
+const toWish = (value: unknown): Wish | null => {
+  if (typeof value !== "object" || value === null) return null;
+  const w = value as Record<string, unknown>;
+  if (typeof w.id !== "string" || typeof w.name !== "string") return null;
+
+  const guests = Number(w.guests);
+  const attendance = ATTENDANCE.includes(w.attendance as string) ? (w.attendance as Attendance) : "hadir";
+
+  return {
+    id: w.id,
+    name: w.name,
+    phone: typeof w.phone === "string" ? w.phone : "",
+    attendance,
+    guests: attendance === "tidak-hadir" ? 0 : Number.isFinite(guests) && guests > 0 ? guests : 1,
+    message: typeof w.message === "string" ? w.message : "",
+    at: asTime(w.at),
+  };
+};
+
+const parseWishes = (rows: unknown): Wish[] => (Array.isArray(rows) ? rows.map(toWish).filter((w): w is Wish => w !== null) : []);
 
 function readLocal(): Wish[] {
   try {
     const raw = localStorage.getItem(KEY);
     if (!raw) return [];
-    const parsed: unknown = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed.filter(isWish) : [];
+    return parseWishes(JSON.parse(raw));
   } catch {
     return []; // private mode, quota, or hand-edited junk — start clean
   }
@@ -58,7 +94,7 @@ export async function listWishes(): Promise<Wish[]> {
     if (!res.ok) throw new Error(`Gagal memuat wishes (${res.status})`);
     const data: unknown = await res.json();
     const rows = Array.isArray(data) ? data : (data as { wishes?: unknown }).wishes;
-    return (Array.isArray(rows) ? rows.filter(isWish) : []).sort((a, b) => b.at - a.at);
+    return parseWishes(rows).sort((a, b) => b.at - a.at);
   }
   return readLocal().sort((a, b) => b.at - a.at);
 }
@@ -69,7 +105,9 @@ export async function addWish(input: NewWish): Promise<Wish> {
   if (ENDPOINT) {
     const res = await fetch(ENDPOINT, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8", // avoids preflight
+      },
       body: JSON.stringify(wish),
     });
     if (!res.ok) throw new Error(`Gagal mengirim RSVP (${res.status})`);

@@ -127,16 +127,65 @@ To collect RSVPs for real, point one environment variable at any endpoint that
 speaks JSON — Google Apps Script, a Cloudflare Worker, Formspree, Supabase:
 
 ```bash
-# .env.local
+cp .env.example .env
+```
+
+```bash
+# .env  (gitignored)
 VITE_RSVP_ENDPOINT=https://script.google.com/macros/s/AKfy.../exec
 ```
+
+Restart `npm run dev` afterwards — Vite reads env files at startup, so the
+change will not hot-reload.
 
 The contract is two calls, in [`src/features/rsvp/store.ts`](src/features/rsvp/store.ts):
 
 - `GET` → an array of wishes (or `{ "wishes": [...] }`)
-- `POST` → one wish: `{ id, name, phone, guests, message, at }`
+- `POST` → one wish: `{ id, name, phone, attendance, guests, message, at }`
+
+`attendance` is `"hadir"` or `"tidak-hadir"`, and `guests` is `0` whenever the
+guest is not coming. Entries written before the attendance column existed are
+read back as `"hadir"` rather than being dropped.
 
 The UI, validation and optimistic update stay the same either way.
+
+### Getting a Google Apps Script URL
+
+[`tools/rsvp-apps-script.gs`](tools/rsvp-apps-script.gs) is the backend, ready to
+paste. It writes each RSVP as a row and reads them back out.
+
+1. Create a Google Sheet — this is where the guest list lives.
+2. In that sheet: **Extensions → Apps Script**. Delete the sample `myFunction`.
+3. Paste the whole of `tools/rsvp-apps-script.gs` in, and save (💾).
+4. **Deploy → New deployment**. Click the gear next to "Select type" and choose
+   **Web app**.
+5. Set:
+   - **Execute as** — *Me*. The script needs your permission to write to the sheet.
+   - **Who has access** — ***Anyone***. Not "Anyone with Google account": your
+     guests will not be signed in, and that setting turns every RSVP into a
+     login page.
+6. **Deploy**, then authorise it. Google will warn that the app is unverified —
+   *Advanced → Go to (project name)* → *Allow*. That warning is expected for
+   your own script.
+7. Copy the **Web app URL**. It ends in `/exec`:
+
+   ```
+   https://script.google.com/macros/s/AKfycb...../exec
+   ```
+
+8. Put it in `.env` as `VITE_RSVP_ENDPOINT`, restart the dev server, and submit
+   a test RSVP. A row should appear in the sheet within a second or two.
+
+**Re-deploying after an edit.** Apps Script pins each deployment to a snapshot of
+the code, so editing the script does not change what the live URL serves. Use
+**Deploy → Manage deployments → ✏️ → Version: New version → Deploy**. That keeps
+the same `/exec` URL. Picking "New deployment" instead gives you a *different*
+URL and leaves the old one running the old code.
+
+**Checking it without the site:** open the `/exec` URL in a browser tab. A
+working deployment returns `[]` (or your rows) as JSON. If you get a login
+screen, step 5's access setting is wrong; if you get an error page, open
+**Executions** in the Apps Script editor to see what threw.
 
 ---
 

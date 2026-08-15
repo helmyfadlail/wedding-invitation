@@ -1,8 +1,9 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { RSVP_COPY } from "../../data/content";
-import { isLocalOnly } from "../../features/rsvp/store";
+import { isLocalOnly, type Attendance } from "../../features/rsvp/store";
 import { useGuestbook } from "../../features/rsvp/useGuestbook";
+import { cn } from "../../lib/cn";
 import { Reveal } from "../ui/Reveal";
 import { Slide } from "../ui/Slide";
 
@@ -22,8 +23,11 @@ export function RsvpSection({ guestName }: { guestName: string | null }) {
   const { wishes, loading, status, error, submit } = useGuestbook();
   const [name, setName] = useState(guestName ?? "");
   const [phone, setPhone] = useState("");
+  const [attendance, setAttendance] = useState<Attendance>("hadir");
   const [guests, setGuests] = useState(1);
   const [message, setMessage] = useState("");
+
+  const attending = attendance === "hadir";
 
   // A link with ?to= should arrive with the name already filled in.
   useEffect(() => {
@@ -36,7 +40,14 @@ export function RsvpSection({ guestName }: { guestName: string | null }) {
   const onSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!name.trim() || sending) return;
-    const ok = await submit({ name: name.trim(), phone: phone.trim(), guests, message: message.trim() });
+    const ok = await submit({
+      name: name.trim(),
+      phone: phone.trim(),
+      attendance,
+      // A guest who is not coming counts as nobody, whatever the picker last held.
+      guests: attending ? guests : 0,
+      message: message.trim(),
+    });
     if (ok) setMessage("");
   };
 
@@ -63,24 +74,45 @@ export function RsvpSection({ guestName }: { guestName: string | null }) {
               <input id="rsvp-phone" value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" inputMode="tel" autoComplete="tel" className={INPUT} />
             </Field>
 
-            <Field label={RSVP_COPY.fields.guests} htmlFor="rsvp-guests">
-              <select
-                id="rsvp-guests"
-                value={guests}
-                onChange={(e) => setGuests(Number(e.target.value))}
-                className={`${INPUT} appearance-none bg-size-[1.2em] bg-position-[right_0.6rem_center] bg-no-repeat pr-8`}
-                style={{
-                  backgroundImage:
-                    "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237b2a2a' stroke-width='1.6'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E\")",
-                }}
-              >
-                {Array.from({ length: MAX_GUESTS }, (_, i) => i + 1).map((n) => (
-                  <option key={n} value={n}>
-                    {n} orang
-                  </option>
+            <fieldset>
+              <legend className="mb-[1.2cqw] block font-sans text-[max(0.75rem,3.1cqw)] font-light text-wine-800/75">{RSVP_COPY.fields.attendance}</legend>
+              <div className="grid grid-cols-2 gap-[2.4cqw]">
+                {(["hadir", "tidak-hadir"] as const).map((value) => (
+                  <label
+                    key={value}
+                    className={cn(
+                      "cursor-pointer rounded-[0.7cqw] border py-[2.6cqw] text-center font-serif text-[max(0.875rem,3.4cqw)] transition duration-200",
+                      attendance === value ? "border-wine-600 bg-wine-800 text-cream-50" : "border-cream-300 bg-white text-wine-900 hover:border-wine-600/50",
+                    )}
+                  >
+                    <input type="radio" name="attendance" value={value} checked={attendance === value} onChange={() => setAttendance(value)} className="sr-only" />
+                    {RSVP_COPY.attendance[value]}
+                  </label>
                 ))}
-              </select>
-            </Field>
+              </div>
+            </fieldset>
+
+            {/* Nobody brings guests to a wedding they are not attending. */}
+            {attending && (
+              <Field label={RSVP_COPY.fields.guests} htmlFor="rsvp-guests">
+                <select
+                  id="rsvp-guests"
+                  value={guests}
+                  onChange={(e) => setGuests(Number(e.target.value))}
+                  className={`${INPUT} appearance-none bg-size-[1.2em] bg-position-[right_0.6rem_center] bg-no-repeat pr-8`}
+                  style={{
+                    backgroundImage:
+                      "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237b2a2a' stroke-width='1.6'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E\")",
+                  }}
+                >
+                  {Array.from({ length: MAX_GUESTS }, (_, i) => i + 1).map((n) => (
+                    <option key={n} value={n}>
+                      {n} orang
+                    </option>
+                  ))}
+                </select>
+              </Field>
+            )}
 
             <Field label={RSVP_COPY.fields.message} htmlFor="rsvp-message">
               <textarea id="rsvp-message" value={message} onChange={(e) => setMessage(e.target.value)} rows={3} maxLength={500} className={`${INPUT} resize-none leading-normal`} />
@@ -131,7 +163,9 @@ export function RsvpSection({ guestName }: { guestName: string | null }) {
                       <p className="font-sans text-[max(0.6875rem,2.5cqw)] whitespace-nowrap text-wine-600/50">{formatWhen(wish.at)}</p>
                     </div>
                     {wish.message && <p className="mt-[1.2cqw] font-serif text-[max(0.8125rem,3.2cqw)] leading-[1.45] text-wine-800/80">{wish.message}</p>}
-                    <p className="mt-[1.2cqw] font-sans text-[max(0.6875rem,2.5cqw)] tracking-widest text-wine-600/45">{wish.guests} orang</p>
+                    <p className="mt-[1.2cqw] font-sans text-[max(0.6875rem,2.5cqw)] tracking-widest text-wine-600/45">
+                      {wish.attendance === "hadir" ? `${RSVP_COPY.attendance.hadir} · ${wish.guests} orang` : RSVP_COPY.attendance["tidak-hadir"]}
+                    </p>
                   </motion.li>
                 ))}
               </AnimatePresence>

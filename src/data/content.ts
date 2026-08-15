@@ -76,8 +76,13 @@ export const RSVP_COPY = {
   fields: {
     name: "Nama Tamu",
     phone: "No. Telp",
+    attendance: "Konfirmasi Kehadiran",
     guests: "Jumlah Kehadiran",
     message: "Wishes & Doa",
+  },
+  attendance: {
+    hadir: "Hadir",
+    "tidak-hadir": "Tidak Hadir",
   },
   submit: "Kirim RSVP",
   sending: "Mengirim…",
