@@ -10,6 +10,17 @@ import { Slide } from "../ui/Slide";
 const MAX_GUESTS = 10;
 
 /**
+ * Phone fields get typed into with thumbs, pasted into from a contacts app, and
+ * autofilled — so the guard has to live on the value, not on keystrokes. Keeps a
+ * single leading `+` (Indonesian numbers are often shared as +62…) and drops
+ * everything else that is not a digit.
+ */
+const sanitizePhone = (value: string): string => {
+  const plus = value.startsWith("+") ? "+" : "";
+  return plus + value.replace(/\D/g, "").slice(0, 15);
+};
+
+/**
  * Slide 8 — RSVP.
  *
  * The design shows a mock form on a maroon mat; this is the working version,
@@ -37,18 +48,25 @@ export function RsvpSection({ guestName }: { guestName: string | null }) {
   const sending = status === "sending";
   const sent = status === "sent";
 
-  const onSubmit = async (event: React.FormEvent) => {
+  const onSubmit = async (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!name.trim() || sending) return;
+    if (!message.trim() || sending) return;
+    if (!phone.trim() || sending) return;
     const ok = await submit({
       name: name.trim(),
       phone: phone.trim(),
       attendance,
-      // A guest who is not coming counts as nobody, whatever the picker last held.
       guests: attending ? guests : 0,
       message: message.trim(),
     });
-    if (ok) setMessage("");
+    if (ok) {
+      setName("");
+      setPhone("");
+      setAttendance("hadir");
+      setGuests(1);
+      setMessage("");
+    }
   };
 
   return (
@@ -71,7 +89,22 @@ export function RsvpSection({ guestName }: { guestName: string | null }) {
             </Field>
 
             <Field label={RSVP_COPY.fields.phone} htmlFor="rsvp-phone">
-              <input id="rsvp-phone" value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" inputMode="tel" autoComplete="tel" className={INPUT} />
+              <input
+                id="rsvp-phone"
+                value={phone}
+                onChange={(e) => setPhone(sanitizePhone(e.target.value))}
+                onBeforeInput={(e) => {
+                  // Blocks the character before it lands, so no flicker of text
+                  // that sanitizePhone would strip a tick later.
+                  if (e.data && !/^\+?\d*$/.test(e.data)) e.preventDefault();
+                }}
+                type="tel"
+                inputMode="numeric"
+                pattern="\+?[0-9]{8,15}"
+                autoComplete="tel"
+                required
+                className={INPUT}
+              />
             </Field>
 
             <fieldset>
@@ -120,7 +153,7 @@ export function RsvpSection({ guestName }: { guestName: string | null }) {
 
             <button
               type="submit"
-              disabled={sending || !name.trim()}
+              disabled={sending || !message.trim() || !name.trim() || !phone.trim()}
               className="mt-[1.5cqw] w-full cursor-pointer rounded-[0.8cqw] bg-wine-800 py-[3.2cqw] font-sans text-[max(0.8125rem,3.4cqw)] font-medium tracking-[0.16em] text-cream-50 uppercase transition duration-300 hover:bg-wine-700 disabled:cursor-not-allowed disabled:opacity-45"
             >
               {sending ? RSVP_COPY.sending : RSVP_COPY.submit}
@@ -154,18 +187,24 @@ export function RsvpSection({ guestName }: { guestName: string | null }) {
           ) : wishes.length === 0 ? (
             <p className="mt-[3cqw] text-center font-serif text-[max(0.8rem,3.1cqw)] text-wine-600/45 italic">{RSVP_COPY.wishesEmpty}</p>
           ) : (
-            <ul className="mt-[3.4cqw] max-h-[74cqw] space-y-[2.4cqw] overflow-y-auto pr-[1cqw] scrollbar-none">
+            <ul className="mt-[3.4cqw] max-h-[74cqw] space-y-[2cqw] overflow-y-auto pr-[1cqw] scrollbar-none">
               <AnimatePresence initial={false}>
                 {wishes.map((wish) => (
-                  <motion.li key={wish.id} layout initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} className="rounded-[0.8cqw] bg-blush-400/22 px-[3.4cqw] py-[2.8cqw]">
+                  <motion.li
+                    key={wish.id}
+                    layout
+                    initial={{ opacity: 0, y: -8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    // className="rounded-[0.8cqw] bg-blush-400/22 px-[3.4cqw] py-[2.8cqw]"
+                  >
                     <div className="flex items-baseline justify-between gap-2">
                       <p className="font-serif text-[max(0.8125rem,3.5cqw)] font-semibold text-wine-800">{wish.name}</p>
-                      <p className="font-sans text-[max(0.6875rem,2.5cqw)] whitespace-nowrap text-wine-600/50">{formatWhen(wish.at)}</p>
+                      {/* <p className="font-sans text-[max(0.6875rem,2.5cqw)] whitespace-nowrap text-wine-600/50">{formatWhen(wish.at)}</p> */}
                     </div>
-                    {wish.message && <p className="mt-[1.2cqw] font-serif text-[max(0.8125rem,3.2cqw)] leading-[1.45] text-wine-800/80">{wish.message}</p>}
-                    <p className="mt-[1.2cqw] font-sans text-[max(0.6875rem,2.5cqw)] tracking-widest text-wine-600/45">
+                    {wish.message && <p className="mt-[0.5cqw] font-serif text-[max(0.8125rem,3.2cqw)] leading-[1.2] text-wine-800/80">{wish.message}</p>}
+                    {/* <p className="mt-[1.2cqw] font-sans text-[max(0.6875rem,2.5cqw)] tracking-widest text-wine-600/45">
                       {wish.attendance === "hadir" ? `${RSVP_COPY.attendance.hadir} · ${wish.guests} orang` : RSVP_COPY.attendance["tidak-hadir"]}
-                    </p>
+                    </p> */}
                   </motion.li>
                 ))}
               </AnimatePresence>
@@ -199,4 +238,4 @@ function Field({ label, htmlFor, children }: { label: string; htmlFor: string; c
   );
 }
 
-const formatWhen = (at: number): string => new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "short" }).format(new Date(at));
+// const formatWhen = (at: number): string => new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "short" }).format(new Date(at));
