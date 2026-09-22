@@ -14,7 +14,7 @@ export const COUPLE = {
     name: "Safira Luthfiana Husodo, S.Pd",
     nameLines: ["Safira Luthfiana", "Husodo, S.Pd"],
     short: "Safira",
-    parentLines: ["Putri dari Bapak Agus Setiyo Husodo,", "S.E & Ibu Dwi Kristiana A.Ma.Pd.S.D"],
+    parentLines: ["Putri dari Bapak Agus Setiyo Husodo,", "S.E & Ibu Dwi K. A.Ma.Pd.S.D"],
   },
   groom: {
     name: "M. Helmy fadlail Albab S.Kom",
@@ -28,9 +28,9 @@ export const COUPLE = {
 export const WEDDING_DATE = new Date("2026-10-24T09:00:00+07:00");
 
 export const VENUE = {
-  label: "Lokasi : Joglo Jolali",
-  name: "Joglo Jolali",
-  mapsUrl: "https://www.google.com/maps/search/?api=1&query=Joglo+Jolali+Nganjuk",
+  label: "Lokasi : Pendopo Andaru",
+  name: "Pendopo Andaru",
+  mapsUrl: "https://maps.app.goo.gl/MtcMtGupK1chVUdF6",
 } as const;
 
 /** The October 2026 week that holds the wedding day. */

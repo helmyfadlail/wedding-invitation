@@ -7,7 +7,7 @@ import { cn } from "../../lib/cn";
 import { Reveal } from "../ui/Reveal";
 import { Slide } from "../ui/Slide";
 
-const MAX_GUESTS = 10;
+const MAX_GUESTS = 2;
 
 /**
  * Phone fields get typed into with thumbs, pasted into from a contacts app, and

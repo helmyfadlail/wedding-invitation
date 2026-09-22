@@ -1,7 +1,7 @@
 # Helmy &amp; Safira — Undangan Pernikahan Digital
 
 A web version of the printed invitation in `reference/Helmy Safira.pdf`, built from the
-artwork in `reference/`. Sabtu, 24 Oktober 2026 · Joglo Jolali.
+artwork in `reference/`. Sabtu, 24 Oktober 2026 · Pendopo Andaru.
 
 ```
 npm install
@@ -51,12 +51,12 @@ The artwork's own faces are not licensed for the web, so the closest Google Font
 stand in — picked by rendering candidates side by side against the PDF, not by
 guesswork:
 
-| Role | Font | Used for |
-| --- | --- | --- |
-| Serif | **Cormorant Garamond** | body text, dates, the calendar, RSVP |
-| Signature script | **Marck Script** | the couple's names, calendar numerals |
-| Copperplate | **Pinyon Script** | "Helmy & Safira" on the title card |
-| Sans | **Jost** | form labels, small UI |
+| Role             | Font                   | Used for                              |
+| ---------------- | ---------------------- | ------------------------------------- |
+| Serif            | **Cormorant Garamond** | body text, dates, the calendar, RSVP  |
+| Signature script | **Marck Script**       | the couple's names, calendar numerals |
+| Copperplate      | **Pinyon Script**      | "Helmy & Safira" on the title card    |
+| Sans             | **Jost**               | form labels, small UI                 |
 
 ### Artwork vs. web type
 
@@ -160,12 +160,12 @@ paste. It writes each RSVP as a row and reads them back out.
 4. **Deploy → New deployment**. Click the gear next to "Select type" and choose
    **Web app**.
 5. Set:
-   - **Execute as** — *Me*. The script needs your permission to write to the sheet.
-   - **Who has access** — ***Anyone***. Not "Anyone with Google account": your
+   - **Execute as** — _Me_. The script needs your permission to write to the sheet.
+   - **Who has access** — **_Anyone_**. Not "Anyone with Google account": your
      guests will not be signed in, and that setting turns every RSVP into a
      login page.
 6. **Deploy**, then authorise it. Google will warn that the app is unverified —
-   *Advanced → Go to (project name)* → *Allow*. That warning is expected for
+   _Advanced → Go to (project name)_ → _Allow_. That warning is expected for
    your own script.
 7. Copy the **Web app URL**. It ends in `/exec`:
 
@@ -179,7 +179,7 @@ paste. It writes each RSVP as a row and reads them back out.
 **Re-deploying after an edit.** Apps Script pins each deployment to a snapshot of
 the code, so editing the script does not change what the live URL serves. Use
 **Deploy → Manage deployments → ✏️ → Version: New version → Deploy**. That keeps
-the same `/exec` URL. Picking "New deployment" instead gives you a *different*
+the same `/exec` URL. Picking "New deployment" instead gives you a _different_
 URL and leaves the old one running the old code.
 
 **Checking it without the site:** open the `/exec` URL in a browser tab. A
@@ -211,18 +211,18 @@ cover artwork when it is shared on WhatsApp.
 
 The source artwork is **70 MB**, including a 50 MB animated GIF of the photobooth
 strip — unusable on the mobile data most guests will open this on. The strip is a
-*live* one, so it is re-encoded rather than flattened: `npm run assets` runs the
+_live_ one, so it is re-encoded rather than flattened: `npm run assets` runs the
 60 frames through ffmpeg into a 2-second H.264 + VP9 loop, which is the same
 animation at roughly a two-hundredth of the bytes. A poster frame covers the
 first paint and anyone browsing with reduced motion turned on.
 `npm run assets` brings it to **3.9 MB**:
 
-| | before | after |
-| --- | --- | --- |
-| Artwork | 20 MB PNG/JPEG | 3.4 MB WebP, transparent margins trimmed |
-| Love-story photo | 5.4 MB JPEG + frame | 71 KB frame + 29 KB photo, layered in the markup |
-| Photobooth GIF | 50 MB, 60 frames | 129 KB mp4 + 115 KB webm loop, 128 KB poster, six 20 KB stills |
-| **Total** | **70 MB** | **3.9 MB** |
+|                  | before              | after                                                          |
+| ---------------- | ------------------- | -------------------------------------------------------------- |
+| Artwork          | 20 MB PNG/JPEG      | 3.4 MB WebP, transparent margins trimmed                       |
+| Love-story photo | 5.4 MB JPEG + frame | 71 KB frame + 29 KB photo, layered in the markup               |
+| Photobooth GIF   | 50 MB, 60 frames    | 129 KB mp4 + 115 KB webm loop, 128 KB poster, six 20 KB stills |
+| **Total**        | **70 MB**           | **3.9 MB**                                                     |
 
 The intro screen only waits on the graphics the cover needs; the rest stream in
 lazily as the guest scrolls. Every `<img>` carries its intrinsic size, so nothing
