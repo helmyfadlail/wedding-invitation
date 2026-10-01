@@ -32,7 +32,14 @@ export function ScheduleSection() {
         viewport={{ once: true, amount: motionProfile.phone ? 0.1 : 0.3, margin: "0px 0px -6% 0px" }}
         transition={{ duration: motionProfile.duration * 0.9, delay: (MAP_BUTTON.delay ?? 0) * motionProfile.stagger, ease: [0.16, 1, 0.3, 1] }}
       >
-        <img src={asset(MAP_BUTTON.src)} alt={`Lihat lokasi ${VENUE.name} di Google Maps`} width={button?.w} height={button?.h} draggable={false} className="h-auto w-full select-none" />
+        <img
+          src={asset(MAP_BUTTON.src)}
+          alt={`Lihat lokasi ${VENUE.name} di Google Maps`}
+          width={button?.w}
+          height={button?.h}
+          draggable={false}
+          className="h-auto w-full select-none"
+        />
       </motion.a>
     </Slide>
   );

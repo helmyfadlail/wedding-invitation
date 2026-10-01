@@ -74,7 +74,10 @@ export function Art({ piece, priority = false, className }: ArtProps) {
       transition={{ duration: motionProfile.duration, delay: (piece.delay ?? 0) * motionProfile.stagger, ease: EASE_SILK }}
     >
       {piece.float && !motionProfile.reduced ? (
-        <motion.div animate={{ y: [0, -7 * motionProfile.travel, 0], rotate: [0, 0.5, 0] }} transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}>
+        <motion.div
+          animate={{ y: [0, -7 * motionProfile.travel, 0], rotate: [0, 0.5, 0] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        >
           {image}
         </motion.div>
       ) : (

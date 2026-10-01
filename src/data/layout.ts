@@ -70,7 +70,7 @@ export const COUPLE: Piece[] = [
   { src: "couple/flower-bride.webp", x: -4.5, y: 18.0, w: 20.0, z: 12, from: "left", float: true },
   { src: "couple/photo-bride.webp", x: 0, y: 22.0, w: 43.2, z: 20, from: "left", delay: 0.1, alt: "Safira Luthfiana Husodo" },
 
-  { src: "couple/rings.webp", x: 41.3, y: 46.8, w: 24.2, z: 25, from: "in", delay: 0.2 },
+  // { src: "couple/rings.webp", x: 41.3, y: 46.8, w: 24.2, z: 25, from: "in", delay: 0.2 },
 
   { src: "couple/flower-groom.webp", x: 81.8, y: 48.3, w: 21.4, z: 12, from: "right", float: true },
   { src: "couple/photo-groom.webp", x: 53.4, y: 57.0, w: 43.1, z: 20, from: "right", delay: 0.1, alt: "M. Helmy Fadlail Albab" },
@@ -106,15 +106,15 @@ export const CALENDAR_BOX = {
 
 export const SCHEDULE: Piece[] = [
   { src: "date/frame-oval.webp", x: 1.6, y: 4.1, w: 93.1, z: 10, from: "in" },
-  { src: "date/txt-akad-nikah.webp", x: 21.9, y: 12.0, w: 52.9, z: 20, from: "in", delay: 0.2, alt: "Akad Nikah" },
-  { src: "date/txt-akad-date.webp", x: 18.2, y: 20.4, w: 60.6, z: 20, from: "up", delay: 0.3, alt: "Sabtu, 24 Oktober 2026" },
-  { src: "date/txt-akad-time.webp", x: 26.5, y: 26.6, w: 45.0, z: 20, from: "up", delay: 0.4, alt: "Keluarga" },
+  { src: "date/txt-akad-nikah.webp", x: 21.9, y: 14.1, w: 52.9, z: 20, from: "in", delay: 0.2, alt: "Akad Nikah" },
+  { src: "date/txt-akad-date.webp", x: 18.4, y: 22.2, w: 60.6, z: 20, from: "up", delay: 0.3, alt: "Sabtu, 24 Oktober 2026" },
+  // { src: "date/txt-akad-time.webp", x: 26.5, y: 26.6, w: 45.0, z: 20, from: "up", delay: 0.4, alt: "Pukul : 09.00 WIB" },
 
   { src: "date/frame-oval.webp", x: 2.0, y: 43.0, w: 93.5, z: 10, from: "in", delay: 0.1 },
   { src: "date/txt-resepsi.webp", x: 37.2, y: 50.9, w: 23.3, z: 20, from: "in", delay: 0.3, alt: "Resepsi" },
   { src: "date/txt-resepsi-date.webp", x: 19.0, y: 59.4, w: 60.1, z: 20, from: "up", delay: 0.4, alt: "Sabtu, 24 Oktober 2026" },
   { src: "date/txt-resepsi-time.webp", x: 27.9, y: 65.6, w: 42.8, z: 20, from: "up", delay: 0.5, alt: "Pukul : 12.00 WIB" },
-  { src: "date/txt-lokasi.webp", x: 17.5, y: 82.8, w: 62.0, z: 20, from: "up", delay: 0.2, alt: "Lokasi : Pendopo Andaru" },
+  { src: "date/txt-lokasi.webp", x: 3.9, y: 77.2, w: 87.7, z: 20, from: "up", delay: 0.2, alt: "Lokasi : Pendopo Andaru" },
 ];
 
 /** The "lihat lokasi" pill is a link, so it is placed on its own. */
